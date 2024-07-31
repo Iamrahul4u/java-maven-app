@@ -19,7 +19,7 @@ pipeline {
             steps {
                 script {
                     
-                    buildJar()
+                    buildJar('iamrahul4u/java-maven-app-devops:1.0')
                 }
             }
         }
