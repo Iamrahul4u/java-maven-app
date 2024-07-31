@@ -12,19 +12,17 @@ pipeline {
         stage("Versioning") {
             steps {
                 script {
-                    // Use single line for command execution to avoid issues
                     sh 'mvn build-helper:parse-version versions:set \
                         -DnewVersion=\\\${parsedVersion.majorVersion}.\\\${parsedVersion.minorVersion}.\\\${parsedVersion.nextIncrementalVersion} \
                         versions:commit'
-                    
-                    // Read the version from pom.xml
+
                     def matcher = readFile('pom.xml') =~ '<version>(.+)</version>'
                     def version = matcher[0][1]
                     env.IMAGE_NAME = "${version}-${BUILD_NUMBER}"
                 }
             }
         }
-        
+
         stage("Build Jar") {
             steps {
                 script {
@@ -32,7 +30,7 @@ pipeline {
                 }
             }
         }
-        
+
         stage("Build Image") {
             steps {
                 script {
@@ -41,7 +39,7 @@ pipeline {
                 }
             }
         }
-        
+
         stage("Deploy") {
             steps {
                 script {
@@ -50,33 +48,28 @@ pipeline {
                 }
             }
         }
+
         stage("Commit Version to GitHub") {
             steps {
                 script {
-           withCredentials([usernamePassword(credentialsId: 'github-login-creds', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+                    withCredentials([usernamePassword(credentialsId: 'github-login-creds', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+                        // URL encode the password
+                        def encodedPassword = URLEncoder.encode(GIT_PASSWORD, 'UTF-8')
 
-                         sh """
-                             def encodedPassword = URLEncoder.encode(GIT_PASSWORD, 'UTF-8')
+                        // Git config for the first-time run
+                        sh 'git config --global user.email "jenkins@example.com"'
+                        sh 'git config --global user.name "jenkins"'
 
-                             git config user.email "${GIT_USERNAME}@example.com"
-                             git config user.name "${GIT_USERNAME}"
+                        // Set the remote URL with the encoded password
+                        sh "git remote set-url origin https://${GIT_USERNAME}:${encodedPassword}@github.com/Iamrahul4u/java-maven-app.git"
 
-                             # Set the remote URL
-                             git remote set-url origin https://${GIT_USERNAME}:${encodedPassword}@github.com/Iamrahul4u/java-maven-app.git
-
-
-                             # Add changes, commit, and push
-                             git add pom.xml
-                             git commit -m "Updated version to ${IMAGE_NAME}"
-
-                             # Push the changes to the main branch
-                             git push origin HEAD:main
-
-                         """
-                       }
+                        // Add changes, commit, and push
+                        sh 'git add pom.xml'
+                        sh "git commit -m 'Updated version to ${IMAGE_NAME}'"
+                        sh 'git push origin HEAD:main'
+                    }
                 }
             }
         }
-
     }   
 }
