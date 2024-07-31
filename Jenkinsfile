@@ -12,16 +12,10 @@ pipeline {
         stage("Versioning") {
             steps {
                 script {
-                    // Parse the version first
-                    sh 'mvn build-helper:parse-version'
-
-                    // Now set the new version using the parsed values
-                    def majorVersion = sh(script: 'echo $parsedVersion_majorVersion', returnStdout: true).trim()
-                    def minorVersion = sh(script: 'echo $parsedVersion_minorVersion', returnStdout: true).trim()
-                    def nextIncrementalVersion = sh(script: 'echo $parsedVersion_nextIncrementalVersion', returnStdout: true).trim()
-
-                    // Set the new version in pom.xml
-                    sh "mvn versions:set -DnewVersion=${majorVersion}.${minorVersion}.${nextIncrementalVersion} versions:commit"
+                    // Use single line for command execution to avoid issues
+                    sh 'mvn build-helper:parse-version versions:set \
+                        -DnewVersion=\\\${parsedVersion.majorVersion}.\\\${parsedVersion.minorVersion}.\\\${parsedVersion.nextIncrementalVersion} \
+                        versions:commit'
                     
                     // Read the version from pom.xml
                     def matcher = readFile('pom.xml') =~ '<version>(.+)</version>'
