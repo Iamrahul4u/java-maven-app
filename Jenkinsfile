@@ -19,7 +19,7 @@ pipeline {
             steps {
                 script {
                     
-                    buildJar('iamrahul4u/java-maven-app-devops:1.0')
+                    buildJar()
                 }
             }
         }
@@ -27,7 +27,7 @@ pipeline {
             steps {
                 script {
                     echo "building image"
-                    buildImage()
+                    buildImage('iamrahul4u/java-maven-app-devops:1.0')
                 }
             }
         }
