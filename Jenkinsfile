@@ -64,7 +64,7 @@ pipeline {
 
                         // Add changes, commit, and push
                         sh 'git add pom.xml'
-                        sh "git commit -m 'Updated version to ${IMAGE_NAME}"
+                        sh "git commit -m 'Updated version to ${IMAGE_NAME}'"
                         sh 'git push origin HEAD:main'
                     }
                 }
