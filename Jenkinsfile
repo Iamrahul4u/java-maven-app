@@ -62,8 +62,6 @@ pipeline {
                              # Set the remote URL
                              git remote set-url origin https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/Iamrahul4u/java-maven-app.git
 
-                             # Check out the main branch (create if it doesn't exist)
-                             git checkout main || git checkout -b main
 
                              # Add changes, commit, and push
                              git add pom.xml
