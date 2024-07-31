@@ -13,11 +13,11 @@ pipeline {
             steps {
                 script {
                     // Use single line for command execution to avoid issues
-                    sh '''
-                        mvn build-helper:parse-version versions:set \
-                        -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.minorVersion}.\${parsedVersion.nextIncrementalVersion} \
-                        versions:commit
-                    '''
+                   sh '''
+                mvn versions:set \
+                -DnewVersion=${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.nextIncrementalVersion} \
+                versions:commit
+            '''
                     
                     // Read the version from pom.xml
                     def matcher = readFile('pom.xml') =~ '<version>(.+)</version>'
