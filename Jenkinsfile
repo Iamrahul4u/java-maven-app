@@ -68,7 +68,8 @@ pipeline {
                              git commit -m "Updated version to ${IMAGE_NAME}"
 
                              # Push the changes to the main branch
-                             git push -u origin main
+                             git push origin HEAD:main
+
                          """
                        }
                 }
