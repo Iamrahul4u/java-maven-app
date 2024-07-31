@@ -52,7 +52,7 @@ pipeline {
         stage("Commit Version to GitHub") {
             steps {
                 script {
-                    withCredentials([usernamePassword(credentialsId: 'github-login-creds', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+                    withCredentials([string(credentialsId: 'github-token',variable:'token')]) {
                         // URL encode the password
 
                         // Git config for the first-time run
@@ -60,7 +60,7 @@ pipeline {
                         sh 'git config --global user.name "jenkins"'
 
                         // Set the remote URL with the encoded password
-                        sh('git remote set-url origin https://%GIT_USERNAME%:%GIT_PASSWORD%@github.com/Iamrahul4u/java-maven-app.git')
+                        sh('git remote set-url origin https://%token%@github.com/Iamrahul4u/java-maven-app.git')
 
                         // Add changes, commit, and push
                         sh 'git add pom.xml'
