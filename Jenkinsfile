@@ -56,11 +56,13 @@ pipeline {
            withCredentials([usernamePassword(credentialsId: 'github-login-creds', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
 
                          sh """
+                             def encodedPassword = URLEncoder.encode(GIT_PASSWORD, 'UTF-8')
+
                              git config user.email "${GIT_USERNAME}@example.com"
                              git config user.name "${GIT_USERNAME}"
 
                              # Set the remote URL
-                             git remote set-url origin https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/Iamrahul4u/java-maven-app.git
+                             git remote set-url origin https://${GIT_USERNAME}:${encodedPassword}@github.com/Iamrahul4u/java-maven-app.git
 
 
                              # Add changes, commit, and push
