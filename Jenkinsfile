@@ -61,9 +61,8 @@ pipeline {
 
                                # Set the remote URL
                                git remote set-url origin https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/Iamrahul4u/java-maven-app.git
-                               git remote -v
+                                git checkout main || git checkout -b main
 
-                               # Show the current remote URL for debugging
                                git remote -v
 
                                # Add changes, commit, and push
