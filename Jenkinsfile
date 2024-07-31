@@ -60,8 +60,7 @@ pipeline {
                         sh 'git config --global user.name "jenkins"'
 
                         // Set the remote URL with the encoded password
-
-                        bat 'git remote set-url origin https://%GIT_USERNAME%:%GIT_PASSWORD%@github.com/Iamrahul4u/java-maven-app.git'
+                        sh('git remote set-url origin https://%GIT_USERNAME%:%GIT_PASSWORD%@github.com/Iamrahul4u/java-maven-app.git')
 
                         // Add changes, commit, and push
                         sh 'git add pom.xml'
