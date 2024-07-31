@@ -60,7 +60,8 @@ pipeline {
                                git config user.name "${GIT_USERNAME}"
 
                                # Set the remote URL
-                               git remote set-url origin https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/Iamrahul4u/java-maven-app.git/main
+                               git remote set-url origin https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/Iamrahul4u/java-maven-app.git
+                               git remote -v
 
                                # Show the current remote URL for debugging
                                git remote -v
