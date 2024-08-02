@@ -59,6 +59,8 @@ pipeline {
 
                         sh "scp cmds.sh ${aws}:/home/ec2-user"
                         sh "scp docker-compose.yaml ${aws}:/home/ec2-user"
+                        sh "ssh -o StrictHostKeyChecking=no ${aws} docker login -u iamrahul4u -p rahul123@1"
+
                         sh "ssh -o StrictHostKeyChecking=no ${aws} ${cmds} "
                     }
                 }
