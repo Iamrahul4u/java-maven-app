@@ -48,27 +48,40 @@ pipeline {
                 }
             }
         }
-
-        stage("Commit Version to GitHub") {
-            steps {
-                script {
-                    withCredentials([string(credentialsId: 'github-token',variable:'token')]) {
-                        // URL encode the password
-
-                        // Git config for the first-time run
-                        sh 'git config --global user.email "jenkins@example.com"'
-                        sh 'git config --global user.name "jenkins"'
-
-                        // Set the remote URL with the encoded password
-                        sh 'git remote set-url origin https://${token}@github.com/Iamrahul4u/java-maven-app.git'
-
-                        // Add changes, commit, and push
-                        sh 'git add pom.xml'
-                        sh "git commit -m 'Updated version to ${IMAGE_NAME}'"
-                        sh 'git push origin HEAD:main'
+        stage("Push image to ec2 and run "){
+            steps{
+                script{
+                def cmds="sh ./cmds.sh ${IMAGE_NAME}"
+                def aws-server="ec2-user@44.212.66.83"
+                    sshagent(['aws-ec2-cred']) {
+                        sh "scp cmds.sh ${aws-server}:/home/ec2-user"
+                        sh "scp docker-compose.yaml ${aws-server}:/home/ec2-user"
+                        sh "ssh -o StrictHostKeyChecking=no ${aws-server} ${cmds} "
                     }
                 }
             }
         }
+
+//         stage("Commit Version to GitHub") {
+//             steps {
+//                 script {
+//                     withCredentials([string(credentialsId: 'github-token',variable:'token')]) {
+//                         // URL encode the password
+//
+//                         // Git config for the first-time run
+//                         sh 'git config --global user.email "jenkins@example.com"'
+//                         sh 'git config --global user.name "jenkins"'
+//
+//                         // Set the remote URL with the encoded password
+//                         sh 'git remote set-url origin https://${token}@github.com/Iamrahul4u/java-maven-app.git'
+//
+//                         // Add changes, commit, and push
+//                         sh 'git add pom.xml'
+//                         sh "git commit -m 'Updated version to ${IMAGE_NAME}'"
+//                         sh 'git push origin HEAD:main'
+//                     }
+//                 }
+//             }
+//         }
     }   
 }
