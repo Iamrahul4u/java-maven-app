@@ -51,12 +51,12 @@ pipeline {
         stage("Push image to ec2 and run "){
             steps{
                 script{
-                def cmds="sh ./cmds.sh ${IMAGE_NAME}"
-                def aws-server="ec2-user@44.212.66.83"
+                    def cmds="sh ./cmds.sh ${IMAGE_NAME}"
+                    def aws="ec2-user@44.212.66.83"
                     sshagent(['aws-ec2-cred']) {
-                        sh "scp cmds.sh ${aws-server}:/home/ec2-user"
-                        sh "scp docker-compose.yaml ${aws-server}:/home/ec2-user"
-                        sh "ssh -o StrictHostKeyChecking=no ${aws-server} ${cmds} "
+                        sh "scp cmds.sh ${aws}:/home/ec2-user"
+                        sh "scp docker-compose.yaml ${aws}:/home/ec2-user"
+                        sh "ssh -o StrictHostKeyChecking=no ${aws} ${cmds} "
                     }
                 }
             }
