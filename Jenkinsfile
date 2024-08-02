@@ -54,6 +54,7 @@ pipeline {
                     def cmds="sh ./cmds.sh ${IMAGE_NAME}"
                     def aws="ec2-user@44.212.66.83"
                     sshagent(['aws-ec2-cred']) {
+                        sh "mkdir -p ~/.ssh"
                         sh "ssh-keyscan -H 44.212.66.83 >> ~/.ssh/known_hosts"
 
                         sh "scp cmds.sh ${aws}:/home/ec2-user"
